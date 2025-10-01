@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  main:
+    build: . # path to your Next.js app (Dockerfile should be there)
+    container_name: dad-project-mangers-nextjs
+    ports:
+      - "3001:3000"
+    environment:
+      - DATABASE_URI=mongodb://mongo:27017
+      - PAYLOAD_SECRET=f13a4f3b1d4b235d74799485
+    post_start:
+      - command: bun run load
+    depends_on:
+      - mongo
+  
+  mongo:
+    image: mongo
+    container_name: mongo_db
+    ports:
+      - "27016:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+    name: dad-manager-app_db
+
